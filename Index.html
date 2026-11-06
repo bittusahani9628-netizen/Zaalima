@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZAALIMA AI</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+background:#050914;
+color:#00eaff;
+font-family:Arial,sans-serif;
+text-align:center;
+padding:25px 15px;
+}
+h1{
+margin-top:40px;
+font-size:38px;
+text-shadow:0 0 20px #00eaff;
+}
+p{color:#aaa}
+.circle{
+width:190px;height:190px;
+border:3px solid #00eaff;
+border-radius:50%;
+margin:45px auto;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 0 30px #00eaff;
+font-size:65px;
+}
+button{
+background:#00eaff;
+color:#001018;
+border:0;
+border-radius:30px;
+padding:15px 25px;
+font-size:17px;
+font-weight:bold;
+margin:10px;
+}
+#answer{
+color:white;
+margin:25px auto;
+max-width:500px;
+line-height:1.6;
+}
+input{
+width:90%;
+max-width:400px;
+padding:15px;
+border-radius:25px;
+border:1px solid #00eaff;
+background:#101a2b;
+color:white;
+font-size:16px;
+}
+</style>
+</head>
+<body>
+
+<h1>ZAALIMA AI</h1>
+<p>Your Personal AI Assistant</p>
+
+<div class="circle">🤖</div>
+
+<button onclick="startListening()">🎤 बोलो ZAALIMA</button>
+
+<br><br>
+
+<input id="question" placeholder="यहाँ कुछ लिखो...">
+
+<button onclick="ask()">Send</button>
+
+<div id="answer">नमस्ते! मैं ZAALIMA हूँ। आप क्या जानना चाहते हैं?</div>
+
+<script>
+const answer=document.getElementById("answer");
+
+function speak(text){
+let speech=new SpeechSynthesisUtterance(text);
+speech.lang="hi-IN";
+speech.rate=1;
+speechSynthesis.speak(speech);
+}
+
+function ask(){
+let q=document.getElementById("question").value.trim();
+if(!q)return;
+
+let reply="मैं अभी सीख रहा हूँ। तुमने पूछा: "+q;
+answer.innerText=reply;
+speak(reply);
+}
+
+function startListening(){
+const SpeechRecognition=window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if(!SpeechRecognition){
+alert("कृपया Chrome ब्राउज़र इस्तेमाल करें।");
+return;
+}
+
+let recognition=new SpeechRecognition();
+recognition.lang="hi-IN";
+recognition.onresult=function(event){
+document.getElementById("question").value=
+event.results[0][0].transcript;
+ask();
+};
+recognition.start();
+}
+</script>
+
+</body>
+</html>
