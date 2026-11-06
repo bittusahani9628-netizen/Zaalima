@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZAALIMA AI</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #07111f;
+  color: white;
+  text-align: center;
+}
+header {
+  padding: 25px;
+  color: #00eaff;
+  font-size: 27px;
+  font-weight: bold;
+  letter-spacing: 3px;
+}
+.circle {
+  width: 150px;
+  height: 150px;
+  border: 3px solid #00eaff;
+  border-radius: 50%;
+  margin: 35px auto;
+  box-shadow: 0 0 30px #00eaff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 65px;
+}
+#status {
+  color: #00eaff;
+  margin: 20px;
+}
+#chat {
+  padding: 15px;
+  height: 220px;
+  overflow-y: auto;
+  text-align: left;
+}
+input {
+  width: 65%;
+  padding: 14px;
+  border-radius: 25px;
+  border: 1px solid #00eaff;
+  background: #142438;
+  color: white;
+}
+button {
+  padding: 13px 18px;
+  border: none;
+  border-radius: 25px;
+  background: #00cfff;
+  color: black;
+  font-weight: bold;
+  margin: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<header>ZAALIMA AI</header>
+
+<div class="circle">🤖</div>
+
+<h3>Your Personal AI Assistant</h3>
+<div id="status">System Ready</div>
+
+<div id="chat">
+  <p>ZAALIMA: नमस्ते! मैं तुम्हारा AI असिस्टेंट हूँ।</p>
+</div>
+
+<input id="msg" placeholder="कुछ पूछो...">
+<button onclick="send()">Send</button>
+<button onclick="listen()">🎤 बोलो</button>
+
+<script>
+function speak(text) {
+  let speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "hi-IN";
+  speechSynthesis.speak(speech);
+}
+
+function reply(text) {
+  let answer = "";
+
+  if(text.includes("hello") || text.includes("नमस्ते")) {
+    answer = "नमस्ते! मैं ZAALIMA AI हूँ।";
+  }
+  else if(text.includes("नाम")) {
+    answer = "मेरा नाम ZAALIMA AI है।";
+  }
+  else if(text.includes("कैसे हो")) {
+    answer = "मैं बिल्कुल ठीक हूँ। आप कैसे हैं?";
+  }
+  else if(text.includes("समय")) {
+    answer = "अभी समय है " + new Date().toLocaleTimeString("hi-IN");
+  }
+  else if(text.includes("तुम कौन")) {
+    answer = "मैं तुम्हारा पर्सनल AI असिस्टेंट हूँ।";
+  }
+  else {
+    answer = "मैंने आपका सवाल सुना। अभी मैं शुरुआती वर्जन हूँ।";
+  }
+
+  document.getElementById("chat").innerHTML +=
+    "<p>ZAALIMA: " + answer + "</p>";
+
+  speak(answer);
+}
+
+function send() {
+  let input = document.getElementById("msg");
+  let text = input.value.trim().toLowerCase();
+
+  if(!text) return;
+
+  document.getElementById("chat").innerHTML +=
+    "<p>You: " + input.value + "</p>";
+
+  input.value = "";
+  reply(text);
+}
+
+function listen() {
+  let Speech = window.SpeechRecognition ||
+               window.webkitSpeechRecognition;
+
+  if(!Speech) {
+    alert("Voice recognition ke liye Chrome browser use karo.");
+    return;
+  }
+
+  let recognition = new Speech();
+  recognition.lang = "hi-IN";
+  recognition.onstart = () => {
+    document.getElementById("status").innerText = "Listening...";
+  };
+  recognition.onresult = (event) => {
+    document.getElementById("msg").value =
+      event.results[0][0].transcript;
+    send();
+  };
+  recognition.onend = () => {
+    document.getElementById("status").innerText = "System Ready";
+  };
+  recognition.start();
+}
+</script>
+
+</body>
+</html>
